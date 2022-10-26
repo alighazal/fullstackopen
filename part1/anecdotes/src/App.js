@@ -1,5 +1,63 @@
 import { useState } from 'react'
 
+const Anecdote =  ({selected, anecdotes, votes}) => {
+  return (
+    <>
+      <div> {anecdotes[selected]} </div> 
+      <div> Has { votes[ selected ] } votes </div>
+    </>
+  );
+}
+
+const AnecdoteWithMostVotes = ({votes, anecdotes}) => {
+
+  const getMostVotedAnecdote = (votes, anecdotes) => {
+    let indexMaxVotedAnecdote = votes.indexOf( Math.max( ...votes ) );
+    return <Anecdote  selected = {indexMaxVotedAnecdote} votes={votes} anecdotes = {anecdotes} />
+  }
+
+  return (
+    <>
+      <h1><b>Anecdote with most votes</b></h1>
+      <div>
+        { getMostVotedAnecdote(votes, anecdotes) }
+      </div>
+    </>
+  );
+}
+
+
+const AnecdoteOfTheDay = ({selected, setSelected, anecdotes, votes, setVotes}) => {
+
+  function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
+  }
+
+  return (
+    <>
+      <h1><b>Anecdote of the day</b></h1>
+      <Anecdote  selected = {selected} votes={votes} anecdotes = {anecdotes} />
+
+      <div>
+      <button onClick={ () => {
+        let randomNumber =  getRandomIntInclusive(0, anecdotes.length -1 )
+        setSelected( randomNumber )
+      }  } > next anecdote </button>
+
+      <button onClick={ () => {
+        let copy = [...votes];
+        copy[selected] ++;
+        setVotes( copy )
+      }  } > vote </button>
+      </div>
+    </>
+
+  );
+
+}
+
 const App = () => {
 
 
@@ -15,31 +73,21 @@ const App = () => {
    
   const [ selected, setSelected] = useState(0)
   const [ votes, setVotes ] = useState( Array(anecdotes.length).fill(0) )
- 
-  function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
-  }
 
   return (
     <div>
-       <div> {anecdotes[selected]} </div> 
-       <div> Has { votes[ selected ] } votes </div>
+      <AnecdoteOfTheDay 
+        selected = {selected} 
+        setSelected = {setSelected} 
+        votes ={votes} 
+        setVotes = {setVotes} 
+        anecdotes={anecdotes}  
+      />
 
-      <div>
-        <button onClick={ () => {
-          let randomNumber =  getRandomIntInclusive(0, anecdotes.length -1 )
-          setSelected( randomNumber )
-        }  } > next anecdote </button>
-        
-        <button onClick={ () => {
-          let copy = [...votes];
-          copy[selected] ++;
-          setVotes( copy )
-        }  } > vote </button>
-      </div>
-
+      <AnecdoteWithMostVotes 
+        votes ={votes} 
+        anecdotes={anecdotes} 
+      />
     </div>
   )
 }
