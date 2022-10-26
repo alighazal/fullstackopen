@@ -2,7 +2,10 @@ import { useState } from 'react'
 
 const StatisticLine = ({text, value}) => {
   return (
-    <div> {text } { value }  </div>
+    <tr>
+      <td>{text}</td> 
+      <td>{value}</td> 
+    </tr>
   );
 }
 
@@ -17,24 +20,33 @@ const Statistics = ({good, bad, neutral}) => {
 
     }
 
+    let statistics = [
+      { "text": "good", "value": good  },
+      { "text": "neutral", "value": neutral  },
+      { "text": "bad", "value": bad  },
+      { "text": "all", "value": good+bad+neutral  },
+      { "text": "average", "value": calculateAvg(good,neutral,bad)  },
+      { "text": "positive", "value": calculatePositivePercentage(good, neutral, bad)  }
+    ];
+
 
   return ( <div>
       <h1> <b> statistics </b> </h1>
-      
 
       { 
       ( good + bad + neutral === 0 ) ? 
         <p> No Feedback Given </p> :
         <div>
-
-          <StatisticLine text ="good" value={good} />
-          <StatisticLine text ="neutral" value={neutral} />
-          <StatisticLine text ="bad" value={bad} />
-          
-          <StatisticLine text ="all" value={good + bad + neutral} />
-          <StatisticLine text ="average" value={calculateAvg(good, bad, neutral)} />
-          <StatisticLine text ="positive" value={calculatePositivePercentage(good, bad, neutral)} />
-          
+          <table>
+            <tbody>
+              {
+                statistics.map( 
+                  ( {text, value}) => <StatisticLine key = {text} text={text} value={value} />
+                )
+              }
+                  
+            </tbody>
+          </table>
         </div>
       }
 
