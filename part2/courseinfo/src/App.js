@@ -1,20 +1,11 @@
 const Course = ({course}) => {
-
-    const getSumOfExercises =  (course) =>{
-        
-        let sum = 0;
-        for (let i = 0; i < course.parts.length; i++) {
-            sum += course.parts[i].exercises
-        }
-
-        return sum;
-    }
+    const total = course.parts.reduce((s, p) => s + p.exercises, 0 )
 
     return (
         <>
             <h1>{course.name}</h1>
             { course.parts.map( part => <p> {part.name} {part.exercises} </p> ) }
-            <p><b> total of {getSumOfExercises(course)}  exercises </b></p>
+            <p><b> total of {total}  exercises </b></p>
         </>
     )
 }
