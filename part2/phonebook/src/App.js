@@ -37,11 +37,27 @@ const AddContact = ({addPerson, newPerson, setNewPerson}) => {
   )
 }
 
-const Contacts = ({content}) => {
+const Contacts = ({content, persons, setPersons}) => {
 
   return (
     <>
-        {content.map( (person) => <div key={person.number} > {person.name} -- {person.number} </div> )}
+        {content.map( (person) =>
+            <div key={person.number} > {person.name} -- {person.number} 
+              <button onClick={
+               () => {
+                //confirm
+                if (window.confirm( `delete ${person.name}` )) {
+                  // send request
+                  personService.deleteObject(person.id).then(
+                    console.log( `deleted user with id : ${person.id}` )
+                  )
+                }
+                // update application state
+                let newState = persons.filter( person_ => person_.id !== person.id )
+                setPersons(newState)
+               } 
+              } > delete </button>            
+            </div> )}
     </>
   )
 }
@@ -97,7 +113,7 @@ const App = () => {
       <AddContact addPerson={addPerson}  newPerson={newPerson} setNewPerson={setNewPerson} /> 
       
       <h2>Numbers</h2>
-      <Contacts content={content} />
+      <Contacts persons = {persons} setPersons={setPersons} content={content} />
       
     </div>
   )
