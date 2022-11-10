@@ -11,10 +11,10 @@ const create = newObject => {
   return request.then(response => response.data)
 }
 
-// const update = (id, newObject) => {
-//   const request = axios.put(`${baseUrl}/${id}`, newObject)
-//   return request.then(response => response.data)
-// }
+const update = (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject)
+  return request.then(response => response.data)
+}
 
 const deleteObject = (id) => {
     const request = axios.delete(`${baseUrl}/${id}`)
@@ -22,4 +22,4 @@ const deleteObject = (id) => {
   }
 
 // eslint-disable-next-line
-export default { getAll, create, deleteObject }
+export default { getAll, create, update, deleteObject }

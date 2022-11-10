@@ -88,8 +88,18 @@ const App = () => {
 
     let alreadyExists = false;
     for (let i = 0; i < persons.length; i++ ){
-      if ( JSON.stringify(persons[i]) === JSON.stringify(newPerson) ){
-        alert( `${newPerson.name} is already added to phonebook` )
+      if ( persons[i].name === newPerson.name ){
+
+        if (window.confirm( `${newPerson.name} is already added to phonebook, 
+                              replace the old number with a new one ` )) {
+          personService.update(persons[i].id, newPerson  ).then(
+            console.log( ` user with id : ${persons[i].id} have been updated` )
+          )
+          let updatedPersonsState = persons.map(  person => 
+                                          ( person.name !== newPerson.name )? person:
+                                                                              newPerson ) 
+          setPersons(updatedPersonsState)
+        }
         alreadyExists = true;
       }
     }
