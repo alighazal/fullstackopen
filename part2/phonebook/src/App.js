@@ -79,11 +79,14 @@ const App = () => {
     }
     if ( !alreadyExists ){
       setPersons(persons.concat(newPerson))
+      axios
+      .post('http://localhost:3001/persons', newPerson)
+      .then(response => {
+        console.log(response)
+      })
       setNewPerson({ name: '', number: '' })
     }
   }
-
-
 
   return (
     <div>
