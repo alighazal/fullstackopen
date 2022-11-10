@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = ({filterString, setFilterString}) => {
 
@@ -53,14 +53,14 @@ const App = () => {
   const [filterString, setFilterString] = useState("")
 
 
+  
   useEffect(() => {
-    axios
-    .get('http://localhost:3001/persons')
-    .then( 
+
+    personService.getAll().then(
       response => {
-        setPersons(response.data)
+        setPersons(response)
       }
-     )
+    )
   }, [])
 
   const content = persons.filter( (person) => 
@@ -79,11 +79,10 @@ const App = () => {
     }
     if ( !alreadyExists ){
       setPersons(persons.concat(newPerson))
-      axios
-      .post('http://localhost:3001/persons', newPerson)
-      .then(response => {
-        console.log(response)
-      })
+      personService.create( newPerson ).then(
+        response => 
+          console.log(response)
+      )
       setNewPerson({ name: '', number: '' })
     }
   }
