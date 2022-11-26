@@ -68,8 +68,8 @@ const Notification = ({ message }) => {
   }
 
   return (
-    <div className='success'>
-      {message}
+    <div className={message.status}>
+      {message.content}
     </div>
   )
 }
@@ -96,22 +96,38 @@ const App = () => {
                                         person.name.toLowerCase().search( filterString ) !== -1 )
 
   const addPerson = (event) => {
-
     event.preventDefault()
-
     let alreadyExists = false;
     for (let i = 0; i < persons.length; i++ ){
       if ( persons[i].name === newPerson.name ){
-
         if (window.confirm( `${newPerson.name} is already added to phonebook, 
                               replace the old number with a new one ` )) {
-          personService.update(persons[i].id, newPerson  ).then(
-            console.log( ` user with id : ${persons[i].id} have been updated` )
-          )
-          let updatedPersonsState = persons.map(  person => 
-                                          ( person.name !== newPerson.name )? person:
-                                                                              newPerson ) 
-          setPersons(updatedPersonsState)
+          personService
+            .update(persons[i].id, newPerson  ).then( data =>{
+              console.log( ` user with id : ${persons[i].id} have been updated` )
+              let updatedPersonsState = persons.map(  person => 
+                ( person.name !== newPerson.name )? person:
+                                                    {...newPerson,
+                                                    'id': persons[i].id } ) 
+              setPersons(updatedPersonsState)
+              console.log( data)
+
+            }
+            ).catch( error => {
+              setMessage({ 
+                  'status': 'error',
+                  "content": `Information of ${newPerson.name} was removed from the server`  
+                  }
+              )
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
+
+              let updatedPersonsState = persons.filter(  person =>  person.name !== newPerson.name ) 
+              setPersons(updatedPersonsState)
+              
+            })
+          
         }
         alreadyExists = true;
       }
@@ -123,7 +139,10 @@ const App = () => {
           console.log(response)
       )
       setMessage(
-        `Added ${newPerson.name}`
+        { 
+          'status': 'success',
+          "content":  `Added ${newPerson.name}`
+        }
       )
       setTimeout(() => {
         setMessage(null)
