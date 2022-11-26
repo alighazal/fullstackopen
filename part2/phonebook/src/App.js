@@ -62,11 +62,24 @@ const Contacts = ({content, persons, setPersons}) => {
   )
 }
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='success'>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
 
   const [persons, setPersons] = useState([])
   const [newPerson, setNewPerson] = useState({ name: '', number: '' })
   const [filterString, setFilterString] = useState("")
+  const [message, setMessage] = useState(null)
 
 
   
@@ -109,6 +122,12 @@ const App = () => {
         response => 
           console.log(response)
       )
+      setMessage(
+        `Added ${newPerson.name}`
+      )
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
       setNewPerson({ name: '', number: '' })
     }
   }
@@ -116,7 +135,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-
+      <Notification message={message} />
       <Filter filterString={filterString}  setFilterString={setFilterString} />
 
       <h2>add a new</h2>
