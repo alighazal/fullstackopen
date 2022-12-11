@@ -133,20 +133,27 @@ const App = () => {
       }
     }
     if ( !alreadyExists ){
+
       setPersons(persons.concat(newPerson))
+
       personService.create( newPerson ).then(
-        response => 
-          console.log(response)
+        person => {
+          console.log(person)
+          setPersons(persons.concat(person))
+        }
       )
+
       setMessage(
         { 
           'status': 'success',
           "content":  `Added ${newPerson.name}`
         }
       )
+
       setTimeout(() => {
         setMessage(null)
       }, 5000)
+
       setNewPerson({ name: '', number: '' })
     }
   }
