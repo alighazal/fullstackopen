@@ -140,19 +140,33 @@ const App = () => {
         person => {
           console.log(person)
           setPersons(persons.concat(person))
-        }
-      )
+          
+          setMessage(
+            { 
+              'status': 'success',
+              "content":  `Added ${newPerson.name}`
+            }
+          )
+    
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
 
-      setMessage(
-        { 
-          'status': 'success',
-          "content":  `Added ${newPerson.name}`
         }
-      )
+      ).catch(error => {
+        console.log(error.response.data.error)
 
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+        setMessage(
+          { 
+            'status': 'error',
+            "content":  error.response.data.error
+          }
+        )
+  
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
 
       setNewPerson({ name: '', number: '' })
     }
