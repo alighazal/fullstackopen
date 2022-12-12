@@ -116,7 +116,7 @@ const App = () => {
             ).catch( error => {
               setMessage({ 
                   'status': 'error',
-                  "content": `Information of ${newPerson.name} was removed from the server`  
+                  "content": error.response.data.error
                   }
               )
               setTimeout(() => {
@@ -133,8 +133,6 @@ const App = () => {
       }
     }
     if ( !alreadyExists ){
-
-      setPersons(persons.concat(newPerson))
 
       personService.create( newPerson ).then(
         person => {
