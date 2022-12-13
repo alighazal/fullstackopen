@@ -1,19 +1,12 @@
-require('dotenv').config()
-
+const app = require('./app') // the actual Express application
 const http = require('http')
-const express = require('express')
-const app = express()
-const cors = require('cors')
+const config = require('./utils/config')
 
-const Blog = require('./models/blog')
-const blogsRouter = require('./controllers/blogs')
 
-app.use(cors())
-app.use(express.json())
+const server = http.createServer(app)
 
-app.use ( '/api/blogs' ,blogsRouter)
 
-const PORT = 3003
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+server.listen(config.PORT, () => {
+  console.log(`Server running on port ${config.PORT}`)
 })
+
