@@ -92,6 +92,26 @@ test('if likes prop is missing, it will default to zero', async () => {
 
 }, 100000)
 
+
+test('if url prop is missing, reqest will fail', async () => {
+	const newBlog = {
+		title: 'tests tests tests',
+		author: 'Messi',
+	}
+	const response = await api.post('/api/blogs').send(newBlog).expect(400)
+	console.log( response.body )
+
+}, 100000)
+
+test('if author prop is missing, reqest will fail', async () => {
+	const newBlog = {
+		author: 'Messi',
+		url: 'http://blog.cleancoder.com/'
+	}
+	const response = await api.post('/api/blogs').send(newBlog).expect(400)
+	console.log( response.body )
+}, 100000)
+
 afterAll(() => {
 	mongoose.connection.close()
 })

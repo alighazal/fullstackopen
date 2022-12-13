@@ -15,7 +15,10 @@ blogsRouter.post('/', (request, response) => {
 		.save()
 		.then(result => {
 			response.status(201).json(result)
-		})
+		}).catch( error => {
+			//TODO send meaningful error msg
+			response.status(400).json({ 'msg' : 'error' })
+		}  )
 })
 
 
