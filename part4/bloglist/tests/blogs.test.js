@@ -112,6 +112,23 @@ test('if author prop is missing, reqest will fail', async () => {
 	console.log( response.body )
 }, 100000)
 
+test('can delete blog post', async () => {
+
+	const newBlog = {
+		title: 'tests tests tests',
+		author: 'Messi',
+		url: 'http://blog.cleancoder.com/',
+		likes: 45
+	}
+	const response = await api.post('/api/blogs').send(newBlog)
+	const allBlogsResponseBeforeDelete = await api.get('/api/blogs')
+	expect(allBlogsResponseBeforeDelete.body).toHaveLength(initialBlogs.length + 1)
+
+	await api.delete(`/api/blogs/${response.body.id}`)
+	const allBlogsResponseAfterDelete = await api.get('/api/blogs')
+	expect(allBlogsResponseAfterDelete.body).toHaveLength(initialBlogs.length)
+}, 100000)
+
 afterAll(() => {
 	mongoose.connection.close()
 })
