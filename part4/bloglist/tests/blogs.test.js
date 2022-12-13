@@ -129,6 +129,27 @@ test('can delete blog post', async () => {
 	expect(allBlogsResponseAfterDelete.body).toHaveLength(initialBlogs.length)
 }, 100000)
 
+
+test('can update blog', async () => {
+
+	const newBlog = {
+		title: 'tests tests tests',
+		author: 'Messi',
+		url: 'http://blog.cleancoder.com/',
+		likes: 45
+	}
+	const responseBefereUpdate = await api.post('/api/blogs').send(newBlog)
+	const updatedBlog = {
+		title: 'tests tests tests',
+		author: 'Ronaldo',
+		url: 'http://blog.cleancoder.com/',
+		likes: 45
+	}
+	const responseAfterUpdateUpdate = await api.put(`/api/blogs/${responseBefereUpdate.body.id}`).send(updatedBlog)
+	expect(responseAfterUpdateUpdate.body.author).toBe(updatedBlog.author)
+
+}, 100000)
+
 afterAll(() => {
 	mongoose.connection.close()
 })
