@@ -80,6 +80,18 @@ test('we can create a new blog post', async () => {
 
 }, 100000)
 
+test('if likes prop is missing, it will default to zero', async () => {
+	const newBlog = {
+		title: 'tests tests tests',
+		author: 'Messi',
+		url: 'http://blog.cleancoder.com/'
+	}
+	const response = await api.post('/api/blogs').send(newBlog)
+	expect(response.body.id).toBeDefined()
+	expect(response.body.likes).toBe(0)
+
+}, 100000)
+
 afterAll(() => {
 	mongoose.connection.close()
 })
