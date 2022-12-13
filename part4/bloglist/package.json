@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "test": "jest --verbose"
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test jest --verbose --runInBand --forceExit --detectOpenHandles" 
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +20,8 @@
     "nodemon": "^2.0.20"
   },
   "devDependencies": {
-    "jest": "^29.3.1"
+    "jest": "^29.3.1",
+    "supertest": "^6.3.3"
   },
   "jest": {
     "testEnvironment": "node"
