@@ -1,6 +1,29 @@
 import { useState } from "react"
+import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+
+const Blog = (props) => {
+
+  const [blog, setBlog] = useState(props.blog)
+  
+  const incrementLikes = () => {
+    let updatedBlog = {
+      id: blog.id,
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    }
+
+    blogService
+      .update(updatedBlog)
+      .then(returnedBlog => {
+        setBlog( {...blog, likes: returnedBlog.likes} )
+      }).catch(error => {
+        console.log(error.message)
+      })
+  }
 
   const blogStyle = {
     paddingTop: 10,
@@ -13,14 +36,15 @@ const Blog = ({ blog }) => {
   const [showDetails, setShowDetails] = useState(false)
 
   return (
-      showDetails?
-        <div style = { blogStyle }>
-          <p>Title: {blog.title}</p>
-          <p>Author: {blog.author}</p>
-          <p>URL: {blog.url}</p>
-          <p>Likes: {blog.likes}</p>
-          <button onClick={() => { setShowDetails(!showDetails) }}>{showDetails ? "hide" : "show"}</button>
-        </div >:
+    showDetails ?
+      <div style={blogStyle}>
+        <p>Title: {blog.title}</p>
+        <p>Author: {blog.author}</p>
+        <p>URL: {blog.url}</p>
+        <p>Likes: {blog.likes}</p>
+        <button onClick={incrementLikes}>like</button>
+        <button onClick={() => { setShowDetails(!showDetails) }}>{showDetails ? "hide" : "show"}</button>
+      </div > :
       <div style={blogStyle}>
         {blog.title} {blog.author}
         <button onClick={() => { setShowDetails(!showDetails) }}>

@@ -112,7 +112,7 @@ const App = () => {
 					<br />
 
 					{
-						blogs.map(blog => <Blog key={blog.id} blog={blog} />)
+						blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />)
 					}
 				</div>
 			}
