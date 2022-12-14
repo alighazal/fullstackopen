@@ -1,4 +1,6 @@
 const BlogForm = ({addBlog, newBlog, setNewBlog }) => (
+    
+    
     <form onSubmit={addBlog}>
         <div>
             title
