@@ -1,8 +1,10 @@
+const blog = require("../models/blog")
+
 const dummy = (blogs) => {
 	return 1
 }
 
-const totalLikes  = (blogs) => {
+const totalLikes = (blogs) => {
 
 	const reducer = (sum, item) => {
 		return sum + item['likes']
@@ -14,14 +16,13 @@ const totalLikes  = (blogs) => {
 
 }
 
-
-const favoriteBlog  = (blogs) => {
+const favoriteBlog = (blogs) => {
 	let most_loved_blog = null
-	for (let i = 0; i < blogs.length; i++){
-		if (! most_loved_blog ){
+	for (let i = 0; i < blogs.length; i++) {
+		if (!most_loved_blog) {
 			most_loved_blog = blogs[i]
-		}else{
-			if ( blogs[i].likes > most_loved_blog.likes ){
+		} else {
+			if (blogs[i].likes > most_loved_blog.likes) {
 				most_loved_blog = blogs[i]
 			}
 		}
@@ -29,8 +30,32 @@ const favoriteBlog  = (blogs) => {
 	return most_loved_blog
 }
 
+const mostBlogs = (blogs) => {
+	// return author who has the largest amount of blogs
+	let authors_blogs_count = {}
+	for (let i = 0; i < blogs.length; i++) {
+		if (authors_blogs_count[blogs[i].author] === undefined)
+			authors_blogs_count[blogs[i].author] = 1
+		else
+			authors_blogs_count[blogs[i].author] += 1
+	}
+	let max_count = -1
+	let max_count_author = null
+	for (var author in authors_blogs_count) {
+		if (authors_blogs_count[author] > max_count) {
+			max_count = authors_blogs_count[author]
+			max_count_author = author
+		}
+	}
+	return max_count_author !== null ? {
+		author: max_count_author,
+		blogs: authors_blogs_count[max_count_author]
+	}: null
+}
+
 module.exports = {
 	dummy,
 	totalLikes,
-	favoriteBlog
+	favoriteBlog,
+	mostBlogs
 }
