@@ -5,6 +5,17 @@ import blogService from '../services/blogs'
 const Blog = (props) => {
 
   const [blog, setBlog] = useState(props.blog)
+
+  const removeBlog = (id) => {
+    blogService
+      .deleteObject(id)
+      .then(returnedBlog => {
+        const newBlogsList = props.blogs.filter( (blog) => blog.id !== id  )
+        props.setBlogs( newBlogsList )
+      }).catch(error => {
+        console.log(error.message)
+      })
+  }
   
   const incrementLikes = () => {
     let updatedBlog = {
@@ -41,8 +52,8 @@ const Blog = (props) => {
         <p>Title: {blog.title}</p>
         <p>Author: {blog.author}</p>
         <p>URL: {blog.url}</p>
-        <p>Likes: {blog.likes}</p>
-        <button onClick={incrementLikes}>like</button>
+        <p>Likes: {blog.likes}  <button onClick={incrementLikes}>like</button> </p>
+        <button onClick={() => {removeBlog(blog.id)}}>remove</button>
         <button onClick={() => { setShowDetails(!showDetails) }}>{showDetails ? "hide" : "show"}</button>
       </div > :
       <div style={blogStyle}>
