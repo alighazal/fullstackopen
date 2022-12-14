@@ -12,16 +12,20 @@ const loginRouter = require('./controllers/login')
 
 app.use(cors())
 app.use(express.json())
-app.use( middleware.tokenExtractor )
 
-app.use ( '/api/blogs',	middleware.userExtractor, blogsRouter)
+app.use ( '/api/blogs' , blogsRouter)
 app.use ( '/api/users',  usersRouter)
 app.use ( '/api/login', loginRouter)
 
 const errorHandler = (error, request, response, next) => {
-	return response.status(400).json({ 'error': error.message })
-}
+	if ( error.name  === 'JsonWebTokenError' ){
+		return response.status(401).json({ 'error': error.message })
+	}
+	else{
+		return response.status(400).json({ 'error': error.message })
+	}
 
+}
 app.use ( errorHandler )
 
 module.exports = app

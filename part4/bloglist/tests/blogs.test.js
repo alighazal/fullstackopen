@@ -43,12 +43,24 @@ const initialBlogs = [
 	}
 ]
 
+const newUser = {
+	'username': 'ziziooo',
+	'name': 'koko',
+	'password': 'toto'
+}
+
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 beforeEach(async () => {
 	await Blog.deleteMany({})
-	const blogObjects = initialBlogs.map(blog => new Blog(blog))
+	await User.deleteMany({})
+
+	const user = await api.post('/api/users').send( newUser )
+
+	const blogObjects = initialBlogs.map(blog => new Blog({ ...blog, user: user.body.id }))
 	const promiseArray = blogObjects.map(blog => blog.save())
+
 	await Promise.all(promiseArray)
 }, 100000 )
 
@@ -72,11 +84,26 @@ test('we can create a new blog post', async () => {
 		url: 'http://blog.cleancoder.com/',
 		likes: 122222
 	}
-	await api.post('/api/blogs').send(newBlog)
+
+	const loginInfo = await api.post('/api/login').send({ 'username': newUser.username, 'password': newUser.password })
+
+	await api.post('/api/blogs').send(newBlog).set({ 'Authorization': `Bearer ${loginInfo.body.token}` })
 
 	const response = await api.get('/api/blogs')
 	expect(response.body).toHaveLength(initialBlogs.length  + 1)
 
+
+}, 100000)
+
+test('we can\'t create a new blog post if not authorized', async () => {
+	const newBlog = {
+		title: 'tests tests tests',
+		author: 'Messi',
+		url: 'http://blog.cleancoder.com/',
+		likes: 122222
+	}
+
+	await api.post('/api/blogs').send(newBlog).expect(401)
 
 }, 100000)
 
@@ -86,7 +113,9 @@ test('if likes prop is missing, it will default to zero', async () => {
 		author: 'Messi',
 		url: 'http://blog.cleancoder.com/'
 	}
-	const response = await api.post('/api/blogs').send(newBlog)
+
+	const loginInfo = await api.post('/api/login').send({ 'username': newUser.username, 'password': newUser.password })
+	const response = await api.post('/api/blogs').send(newBlog).set({ 'Authorization': `Bearer ${loginInfo.body.token}` })
 	expect(response.body.id).toBeDefined()
 	expect(response.body.likes).toBe(0)
 
@@ -98,8 +127,9 @@ test('if url prop is missing, reqest will fail', async () => {
 		title: 'tests tests tests',
 		author: 'Messi',
 	}
-	const response = await api.post('/api/blogs').send(newBlog).expect(400)
-	console.log( response.body )
+
+	const loginInfo = await api.post('/api/login').send({ 'username': newUser.username, 'password': newUser.password })
+	const response = await api.post('/api/blogs').send(newBlog).set({ 'Authorization': `Bearer ${loginInfo.body.token}` }).expect(400)
 
 }, 100000)
 
@@ -108,8 +138,9 @@ test('if author prop is missing, reqest will fail', async () => {
 		author: 'Messi',
 		url: 'http://blog.cleancoder.com/'
 	}
-	const response = await api.post('/api/blogs').send(newBlog).expect(400)
-	console.log( response.body )
+	const loginInfo = await api.post('/api/login').send({ 'username': newUser.username, 'password': newUser.password })
+
+	const response = await api.post('/api/blogs').set({ 'Authorization': `Bearer ${loginInfo.body.token}` }).send(newBlog).expect(400)
 }, 100000)
 
 test('can delete blog post', async () => {
@@ -120,13 +151,31 @@ test('can delete blog post', async () => {
 		url: 'http://blog.cleancoder.com/',
 		likes: 45
 	}
-	const response = await api.post('/api/blogs').send(newBlog)
+
+	const loginInfo = await api.post('/api/login').send({ 'username': newUser.username, 'password': newUser.password })
+	const response = await api.post('/api/blogs').send(newBlog).set({ 'Authorization': `Bearer ${loginInfo.body.token}` })
+
 	const allBlogsResponseBeforeDelete = await api.get('/api/blogs')
 	expect(allBlogsResponseBeforeDelete.body).toHaveLength(initialBlogs.length + 1)
 
-	await api.delete(`/api/blogs/${response.body.id}`)
+	await api.delete(`/api/blogs/${response.body.id}`).set({ 'Authorization': `Bearer ${loginInfo.body.token}` })
 	const allBlogsResponseAfterDelete = await api.get('/api/blogs')
 	expect(allBlogsResponseAfterDelete.body).toHaveLength(initialBlogs.length)
+}, 100000)
+
+
+test('can\'t delete blog post if not authorized', async () => {
+	const newBlog = {
+		title: 'tests tests tests',
+		author: 'Messi',
+		url: 'http://blog.cleancoder.com/',
+		likes: 45
+	}
+	const loginInfo = await api.post('/api/login').send({ 'username': newUser.username, 'password': newUser.password })
+	const response = await api.post('/api/blogs').send(newBlog).set({ 'Authorization': `Bearer ${loginInfo.body.token}` })
+	const allBlogsResponseBeforeDelete = await api.get('/api/blogs')
+	expect(allBlogsResponseBeforeDelete.body).toHaveLength(initialBlogs.length + 1)
+	await api.delete(`/api/blogs/${response.body.id}`).expect(401)
 }, 100000)
 
 
@@ -138,14 +187,18 @@ test('can update blog', async () => {
 		url: 'http://blog.cleancoder.com/',
 		likes: 45
 	}
-	const responseBefereUpdate = await api.post('/api/blogs').send(newBlog)
+
+	const loginInfo = await api.post('/api/login').send({ 'username': newUser.username, 'password': newUser.password })
+
+
+	const responseBefereUpdate = await api.post('/api/blogs').send(newBlog).set({ 'Authorization': `Bearer ${loginInfo.body.token}` })
 	const updatedBlog = {
 		title: 'tests tests tests',
 		author: 'Ronaldo',
 		url: 'http://blog.cleancoder.com/',
 		likes: 45
 	}
-	const responseAfterUpdateUpdate = await api.put(`/api/blogs/${responseBefereUpdate.body.id}`).send(updatedBlog)
+	const responseAfterUpdateUpdate = await api.put(`/api/blogs/${responseBefereUpdate.body.id}`).send(updatedBlog).set({ 'Authorization': `Bearer ${loginInfo.body.token}` })
 	expect(responseAfterUpdateUpdate.body.author).toBe(updatedBlog.author)
 
 }, 100000)
