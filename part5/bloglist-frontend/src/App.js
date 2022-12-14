@@ -3,14 +3,25 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+const Notification = ({ message }) => {
+	if (message === null) {
+		return null
+	}
+
+	return (
+		<div className={message.status}>
+			{message.content}
+		</div>
+	)
+}
+
 const App = () => {
 	const [blogs, setBlogs] = useState([])
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [user, setUser] = useState(null)
-	const [newBlog, setNewBlog] = useState({title: "", author: "", url: ""})
-	const [errorMessage, setErrorMessage] = useState(null)
-
+	const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" })
+	const [message, setMessage] = useState(null)
 
 	useEffect(() => {
 		blogService.getAll(user).then(blogs =>
@@ -21,9 +32,9 @@ const App = () => {
 	useEffect(() => {
 		const loggedUserJSON = window.localStorage.getItem('loggedUser')
 		if (loggedUserJSON) {
-		  const user = JSON.parse(loggedUserJSON)
-		  setUser(user)
-		  blogService.setToken(user.token)
+			const user = JSON.parse(loggedUserJSON)
+			setUser(user)
+			blogService.setToken(user.token)
 		}
 	}, [])
 
@@ -37,14 +48,26 @@ const App = () => {
 			setUser(user)
 			window.localStorage.setItem(
 				'loggedUser', JSON.stringify(user)
-			) 
+			)
 			blogService.setToken(user.token)
+
+			setMessage({
+				'status': 'success',
+				"content": 'logged in :)'
+			})
+			setTimeout(() => {
+				setMessage(null)
+			}, 5000)
+
 			setUsername('')
 			setPassword('')
 		} catch (exception) {
-			setErrorMessage('Wrong credentials')
+			setMessage({
+				'status': 'error',
+				"content": 'Wrong credentials'
+			})
 			setTimeout(() => {
-				setErrorMessage(null)
+				setMessage(null)
 			}, 5000)
 		}
 	}
@@ -52,11 +75,26 @@ const App = () => {
 	const addBlog = (event) => {
 		event.preventDefault()
 		blogService
-		  .create(newBlog)
-		  .then(returnedBlog => {
-			setBlogs(blogs.concat(returnedBlog))
-			setNewBlog({title: "", author: "", url: ""})
-		  })
+			.create(newBlog)
+			.then(returnedBlog => {
+				setBlogs(blogs.concat(returnedBlog))
+				setMessage({
+					'status': 'success',
+					"content": `a new blog "${returnedBlog.title}" was added `
+				})
+				setTimeout(() => {
+					setMessage(null)
+				}, 5000)
+				setNewBlog({ title: "", author: "", url: "" })
+			}).catch( error => {
+				setMessage({
+					'status': 'error',
+					"content": error.message
+				})
+				setTimeout(() => {
+					setMessage(null)
+				}, 5000)
+			} )
 	}
 
 	const loginForm = () => (
@@ -85,13 +123,13 @@ const App = () => {
 
 	const blogForm = () => (
 		<form onSubmit={addBlog}>
-		  <div>
+			<div>
 				title
 				<input
 					type="text"
 					value={newBlog.title}
 					name="Username"
-					onChange={({ target }) => setNewBlog({...newBlog, title: target.value })}
+					onChange={({ target }) => setNewBlog({ ...newBlog, title: target.value })}
 				/>
 			</div>
 			<div>
@@ -100,7 +138,7 @@ const App = () => {
 					type="text"
 					value={newBlog.author}
 					name="Username"
-					onChange={({ target }) => setNewBlog({...newBlog, author: target.value })}
+					onChange={({ target }) => setNewBlog({ ...newBlog, author: target.value })}
 				/>
 			</div>
 			<div>
@@ -109,22 +147,26 @@ const App = () => {
 					type="text"
 					value={newBlog.url}
 					name="Username"
-					onChange={({ target }) => setNewBlog({...newBlog, url: target.value })}
+					onChange={({ target }) => setNewBlog({ ...newBlog, url: target.value })}
 				/>
 			</div>
-		  <button type="submit">save</button>
-		</form>  
-	  )
+			<button type="submit">save</button>
+		</form>
+	)
 
 	return (
 		<div>
+
+
+
 			<h2>blogs</h2>
+			<Notification message={message} />
 			{user === null ?
 				loginForm() :
 				<div>
 					<p>
 						{user.name} logged-in
-						<button  onClick={()=>{
+						<button onClick={() => {
 							setUser(null)
 							window.localStorage.removeItem('loggedUser')
 						}} >log out</button>
@@ -133,11 +175,11 @@ const App = () => {
 					<br />
 					{blogForm()}
 					<br />
-					
+
 					{
-					blogs.map(blog =>
-						<Blog key={blog.id} blog={blog} />
-					)
+						blogs.map(blog =>
+							<Blog key={blog.id} blog={blog} />
+						)
 					}
 				</div>
 			}
