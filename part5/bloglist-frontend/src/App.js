@@ -5,6 +5,7 @@ import loginService from './services/login'
 import Login from './components/Login'
 import Notification from './components/Notication'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
@@ -105,7 +106,9 @@ const App = () => {
 					</p>
 
 					<br />
-					<BlogForm addBlog={addBlog} newBlog={newBlog} setNewBlog={setNewBlog} />
+					<Togglable  buttonLabel="New Blog" >
+						<BlogForm addBlog={addBlog} newBlog={newBlog} setNewBlog={setNewBlog} />
+					</Togglable>
 					<br />
 
 					{
