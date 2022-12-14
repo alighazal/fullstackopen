@@ -53,9 +53,34 @@ const mostBlogs = (blogs) => {
 	}: null
 }
 
+
+const mostLikes = (blogs) => {
+	// return author who has the largest amount of blogs
+	let author_like_count = {}
+	for (let i = 0; i < blogs.length; i++) {
+		if (author_like_count[blogs[i].author] === undefined)
+			author_like_count[blogs[i].author] = blogs[i].likes
+		else
+			author_like_count[blogs[i].author] += blogs[i].likes
+	}
+	let max_count = -1
+	let max_count_author = null
+	for (var author in author_like_count) {
+		if (author_like_count[author] > max_count) {
+			max_count = author_like_count[author]
+			max_count_author = author
+		}
+	}
+	return max_count_author !== null ? {
+		author: max_count_author,
+		likes: author_like_count[max_count_author]
+	}: null
+}
+
 module.exports = {
 	dummy,
 	totalLikes,
 	favoriteBlog,
-	mostBlogs
+	mostBlogs,
+	mostLikes
 }
