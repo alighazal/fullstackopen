@@ -9,7 +9,7 @@ const Blog = (props) => {
   const removeBlog = (id) => {
     blogService
       .deleteObject(id)
-      .then(returnedBlog => {
+      .then(() => {
         const newBlogsList = props.blogs.filter( (blog) => blog.id !== id  )
         props.setBlogs( newBlogsList )
       }).catch(error => {
@@ -57,7 +57,7 @@ const Blog = (props) => {
         <button onClick={() => { setShowDetails(!showDetails) }}>{showDetails ? 'hide' : 'show'}</button>
       </div > :
       <div style={blogStyle}>
-        {blog.title} {blog.author}
+        <p>{ blog.title }  { blog.author }</p>
         <button onClick={() => { setShowDetails(!showDetails) }}>
           {showDetails ? 'hide' : 'show'}
         </button>
