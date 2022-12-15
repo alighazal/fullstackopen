@@ -13,7 +13,6 @@ describe('Blog', () => {
   }
   test('renders title and author & doesn\'t render likes and url', () => {
 
-
     render(<Blog blog={blog} />)
 
     const author_displayed = screen.queryByText('author name')
@@ -28,7 +27,7 @@ describe('Blog', () => {
   })
 
 
-  test('after clicking the button, children are displayed', () => {
+  test('after clicking the button, likes and url are displayed', () => {
 
     render(<Blog blog={blog} />)
 
