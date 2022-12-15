@@ -72,7 +72,7 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlog))
         setMessage({
           'status': 'success',
-          'content': `a new blog "${returnedBlog.title}" was added `
+          'content': `a new blog "${returnedBlog.title}" was added`
         })
         setTimeout(() => {
           setMessage(null)
