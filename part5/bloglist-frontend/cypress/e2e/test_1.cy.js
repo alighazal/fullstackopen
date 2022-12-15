@@ -64,8 +64,23 @@ describe('Blog app', function () {
 
       cy.contains(`a new blog "book One" was added`)
      })
-  })
 
+     it('A blog can be liked', function () {
+      cy.contains("New Blog").click()
+      cy.get("#blog-form-title").type("book One")
+      cy.get("#blog-form-author").type("Author One")
+      cy.get("#blog-form-url").type("www.book-one.com")
+      cy.get("#blog-form-submit").click()
+
+      cy.contains(`a new blog "book One" was added`)
+
+      cy.contains(`show`).click()
+      cy.contains(`Likes: 0`)
+      cy.contains(`like`).click()
+      cy.contains(`Likes: 1`)
+
+     })
+    })
 
 })
 
