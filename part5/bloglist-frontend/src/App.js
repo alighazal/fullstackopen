@@ -12,7 +12,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
   const [message, setMessage] = useState(null)
 
   useEffect(() => {
@@ -65,7 +64,7 @@ const App = () => {
     }
   }
 
-  const addBlog = (event) => {
+  const addBlog = (newBlog) => {
     event.preventDefault()
     blogService
       .create(newBlog)
@@ -78,7 +77,6 @@ const App = () => {
         setTimeout(() => {
           setMessage(null)
         }, 5000)
-        setNewBlog({ title: '', author: '', url: '' })
       }).catch(error => {
         setMessage({
           'status': 'error',
@@ -129,7 +127,7 @@ const App = () => {
 
           <br />
           <Togglable  buttonLabel="New Blog" >
-            <BlogForm addBlog={addBlog} newBlog={newBlog} setNewBlog={setNewBlog} />
+            <BlogForm addBlog={addBlog}  />
           </Togglable>
           <br />
 
