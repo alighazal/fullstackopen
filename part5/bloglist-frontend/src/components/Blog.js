@@ -2,35 +2,13 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 
 
-const Blog = (props) => {
-
-  const [blog, setBlog] = useState(props.blog)
-
+const Blog = ({ blog, blogs, setBlogs, incrementLikes }) => {
   const removeBlog = (id) => {
     blogService
       .deleteObject(id)
       .then(() => {
-        const newBlogsList = props.blogs.filter( (blog) => blog.id !== id  )
-        props.setBlogs( newBlogsList )
-      }).catch(error => {
-        console.log(error.message)
-      })
-  }
-
-  const incrementLikes = () => {
-    let updatedBlog = {
-      id: blog.id,
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url
-    }
-
-    blogService
-      .update(updatedBlog)
-      .then(returnedBlog => {
-        setBlog( { ...blog, likes: returnedBlog.likes } )
+        const newBlogsList = blogs.filter( (blog) => blog.id !== id  )
+        setBlogs( newBlogsList )
       }).catch(error => {
         console.log(error.message)
       })
@@ -49,10 +27,10 @@ const Blog = (props) => {
   return (
     showDetails ?
       <div style={blogStyle}>
-        <p>Title: {blog.title}</p>
-        <p>Author: {blog.author}</p>
-        <p>URL: {blog.url}</p>
-        <p>Likes: {blog.likes}  <button onClick={incrementLikes}>like</button> </p>
+        <p>Title: <span>{blog.title}</span></p>
+        <p>Author: <span>{blog.author}</span></p>
+        <p>URL: <span>{blog.url}</span></p>
+        <p>Likes: <span>{blog.likes}</span>  <button onClick={() => incrementLikes(blog)}> like </button> </p>
         <button onClick={() => {removeBlog(blog.id)}}>remove</button>
         <button onClick={() => { setShowDetails(!showDetails) }}>{showDetails ? 'hide' : 'show'}</button>
       </div > :

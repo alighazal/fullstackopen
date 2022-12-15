@@ -90,6 +90,27 @@ const App = () => {
       })
   }
 
+  const incrementLikes = (blog) => {
+    let updatedBlog = {
+      id: blog.id,
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    }
+
+    blogService
+      .update(updatedBlog)
+      .then(returnedBlog => {
+        const blogsUpdated = blogs.map( _blog => ( _blog.id === blog.id  )? { ...blog, likes: returnedBlog.likes }: _blog  )
+        setBlogs( blogsUpdated  )
+        // setBlog(  )
+      }).catch(error => {
+        console.log(error.message)
+      })
+  }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -113,7 +134,7 @@ const App = () => {
           <br />
 
           {
-            blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />)
+            blogs.map(blog => <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs} incrementLikes={incrementLikes} />)
           }
         </div>
       }

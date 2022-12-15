@@ -27,22 +27,45 @@ describe('Blog', () => {
   })
 
 
-  test('after clicking the button, likes and url are displayed', () => {
+  test('after clicking the button, likes and url are displayed', async () => {
 
     render(<Blog blog={blog} />)
+    const user = userEvent.setup()
 
     const button = screen.getByText('show')
-    userEvent.click(button)
+    await user.click(button)
 
-    const url_displayed = screen.queryByText('www.test.com')
-    const likes_displayed = screen.queryByText('134')
-    const hide_button_displayed = screen.queryByText('hide')
+    const url_displayed = screen.getByText('www.test.com')
+    const likes_displayed = screen.getByText('134')
+    const hide_button_displayed =  screen.getByText('hide')
 
     expect(url_displayed).toBeDefined()
     expect(likes_displayed).toBeDefined()
     expect(hide_button_displayed).toBeDefined()
   })
 
+  test('clicking the likes button twice calls event handler twice', async () => {
 
+    const mockHandler = jest.fn()
+
+    render(
+      <Blog blog={blog} incrementLikes={mockHandler} />
+    )
+
+    const user = userEvent.setup()
+    const showButton = screen.getByText('show')
+    await user.click(showButton)
+
+
+    const likeButton = screen.getByText('like')
+    expect(likeButton).toBeDefined()
+
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
+  })
 
 })
