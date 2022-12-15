@@ -10,36 +10,28 @@ describe('BlogForm', () => {
 
   test('creating new blog, the function handler is called with the correct detail', async () => {
 
-
     let testBlog = {
       author: 'author name ',
       title:' test title',
       url: 'www.test.com'
     }
-
     const mockHandler = jest.fn()
-
-    render(
-      <BlogForm addBlog={mockHandler} />
-    )
-
     const user = userEvent.setup()
+
+    render( <BlogForm addBlog={mockHandler} />)
 
     const input_title = screen.getByPlaceholderText('write here blog title')
     const input_author = screen.getByPlaceholderText('write here blog author')
     const input_URL = screen.getByPlaceholderText('write here blog URL')
-
 
     const sendButton = screen.getByText('save')
 
     await user.type(input_title, testBlog.title )
     await user.type(input_author, testBlog.author)
     await user.type(input_URL, testBlog.url )
-
     fireEvent.submit(sendButton)
 
     const form = screen.getByTestId('blog-form')
-
     expect(form).toHaveFormValues({
       title: testBlog.title,
       author: testBlog.author,
