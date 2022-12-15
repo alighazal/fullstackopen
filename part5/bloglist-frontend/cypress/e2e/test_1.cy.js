@@ -80,6 +80,24 @@ describe('Blog app', function () {
       cy.contains(`Likes: 1`)
 
      })
+
+
+     it('A blog can be deleted', function () {
+      cy.contains("New Blog").click()
+      cy.get("#blog-form-title").type("book One")
+      cy.get("#blog-form-author").type("Author One")
+      cy.get("#blog-form-url").type("www.book-one.com")
+      cy.get("#blog-form-submit").click()
+
+      cy.contains(`a new blog "book One" was added`)
+
+      cy.contains(`show`).click()
+      cy.contains(`remove`).click()
+
+      cy.contains("Title: book One").should('not.exist')
+      cy.contains("Author One").should('not.exist')
+
+     })
     })
 
 })
