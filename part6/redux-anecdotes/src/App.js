@@ -4,15 +4,13 @@ import AnecdoteList from './components/AnecdoteList'
 
 
 const App = () => {
-  const anecdotes = useSelector(state => state)
-
+  const anecdotes = useSelector((state) => state.anecdote)
   return (
     <div>
       <h2>Anecdotes</h2>
-      <AnecdoteList anecdotes={anecdotes} / >
+      <AnecdoteList anecdotes={ anecdotes.slice().sort( (a,b ) => ( b.votes - a.votes )) } />
       <h2>create new</h2>
       <AnecdotesForm />
-      
     </div>
   )
 }
