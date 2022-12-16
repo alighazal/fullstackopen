@@ -5,7 +5,16 @@ const initialState = {"message": "hello world"}
 const notificationReducer = createSlice({
   name: 'notification',
   initialState,
-  reducers: {},
+  reducers: {
+    createNewNotification(state, action) {
+      const content = action.payload
+      state.message = content
+    },
+    hideNotification(state, action) {
+      state.message = ''
+    }
+  },
 })
 
+export const { createNewNotification, hideNotification } = notificationReducer.actions
 export default notificationReducer.reducer

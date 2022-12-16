@@ -18,7 +18,6 @@ const asObject = (anecdote) => {
     votes: 0
   }
 }
-
 const initialState = anecdotesAtStart.map(asObject)
 
 const anecdoteReducer = createSlice({
