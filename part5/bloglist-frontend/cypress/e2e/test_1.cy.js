@@ -141,8 +141,6 @@ describe('Blog app', function () {
         }
       )
 
-      cy.visit('http://localhost:3000')
-
       cy.get('.blog').eq(0).should('contain', books[books.length - 1].author)
       cy.get('.blog').eq(1).should('contain', books[books.length - 2].author)
 

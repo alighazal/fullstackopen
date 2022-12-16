@@ -102,8 +102,7 @@ const App = () => {
       .update(updatedBlog)
       .then(returnedBlog => {
         const blogsUpdated = blogs.map( _blog => ( _blog.id === blog.id  )? { ...blog, likes: returnedBlog.likes }: _blog  )
-        setBlogs( blogsUpdated  )
-        // setBlog(  )
+        setBlogs(blogsUpdated.sort( (a,b) => b.likes - a.likes ))
       }).catch(error => {
         console.log(error.message)
       })
