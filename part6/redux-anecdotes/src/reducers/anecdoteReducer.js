@@ -25,9 +25,10 @@ const reducer = (state = initialState, action) => {
 
   switch (action.type) {
     case 'UPVOTE':
-      const newState = state.map( item => (item.id == action.data.id)? {...item, votes: item.votes + 1} : item  )
+      const newState = state.map( item => (item.id === action.data.id)? {...item, votes: item.votes + 1} : item  )
       return newState
-
+    case 'NEW_ANECDOTE':
+      return state.concat( asObject( action.data.anecdote.content )  )
     default: return state
   }
 }
