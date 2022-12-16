@@ -26,7 +26,7 @@ const Blog = ({ blog, blogs, setBlogs, incrementLikes }) => {
 
   return (
     showDetails ?
-      <div style={blogStyle}>
+      <div className="blog" style={blogStyle}>
         <p>Title: <span>{blog.title}</span></p>
         <p>Author: <span>{blog.author}</span></p>
         <p>URL: <span>{blog.url}</span></p>
@@ -34,7 +34,7 @@ const Blog = ({ blog, blogs, setBlogs, incrementLikes }) => {
         <button onClick={() => {removeBlog(blog.id)}}>remove</button>
         <button onClick={() => { setShowDetails(!showDetails) }}>{showDetails ? 'hide' : 'show'}</button>
       </div > :
-      <div style={blogStyle}>
+      <div className="blog" style={blogStyle}>
         <p>{ blog.title }  { blog.author }</p>
         <button onClick={() => { setShowDetails(!showDetails) }}>
           {showDetails ? 'hide' : 'show'}
