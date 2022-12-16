@@ -1,30 +1,21 @@
 import { useSelector, useDispatch } from 'react-redux'
+import { addNewAnecdoteAction, increasVoteCountAction } from './reducers/anecdoteReducer'
+
 
 const App = () => {
   const anecdotes = useSelector(state => state)
   const dispatch = useDispatch()
 
-  const vote = (id) => {
-    console.log('vote', id)
-    dispatch( {
-        "type": "UPVOTE",
-        "data": {
-          "id" : id
-        }
-    } )
-  }
 
+  const increasVoteCount = (id) => {
+    console.log('vote', id)
+    dispatch( increasVoteCountAction(id) )
+  }
+  
   const addNewAnecdote = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
-    dispatch( {
-        "type": "NEW_ANECDOTE",
-        "data": {
-          "anecdote": {
-            "content": content
-          }
-        }
-    } )
+    dispatch( addNewAnecdoteAction(content) )
     event.target.anecdote.value = ''
   }
 
@@ -38,7 +29,7 @@ const App = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => increasVoteCount(anecdote.id)}>vote</button>
           </div>
         </div>
       )}

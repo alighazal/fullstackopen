@@ -1,3 +1,4 @@
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -31,6 +32,26 @@ const reducer = (state = initialState, action) => {
       return state.concat( asObject( action.data.anecdote.content )  )
     default: return state
   }
+}
+
+export const increasVoteCountAction = (id) => {
+  return( {
+      "type": "UPVOTE",
+      "data": {
+        "id" : id
+      }
+  } )
+}
+
+export const addNewAnecdoteAction = (content) => {
+  return( {
+      "type": "NEW_ANECDOTE",
+      "data": {
+        "anecdote": {
+          "content": content
+        }
+      }
+  } )
 }
 
 export default reducer
