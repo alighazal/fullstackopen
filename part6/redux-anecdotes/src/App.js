@@ -1,12 +1,21 @@
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import AnecdotesForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Filter from './components/Filter'
 import Notification from './components/Notification'
-
+import { setAnecdotesAction } from './reducers/anecdoteReducer'
+import anecdoteService from './services/anecdotes'
 
 const App = () => {
-  const anecdotes = useSelector((state) => (state.anecdote.filter(anecdote => (anecdote.content.includes(state.filter.format)) )))
+  const dispatch = useDispatch()
+  useEffect(() => {
+    anecdoteService
+      .getAll().then(anecdote => dispatch(setAnecdotesAction(anecdote))) }, [dispatch] ) 
+  
+    const anecdotes = useSelector((state) => (state.anecdote.filter(anecdote => (anecdote.content.includes(state.filter.format)) )))
+
+
   return (
     <div>
       <h2>Anecdotes</h2>
