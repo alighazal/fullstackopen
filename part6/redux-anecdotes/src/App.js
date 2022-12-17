@@ -4,17 +4,15 @@ import AnecdotesForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Filter from './components/Filter'
 import Notification from './components/Notification'
-import { setAnecdotesAction } from './reducers/anecdoteReducer'
-import anecdoteService from './services/anecdotes'
+import {  initializeAnecdotes } from './reducers/anecdoteReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   useEffect(() => {
-    anecdoteService
-      .getAll().then(anecdote => dispatch(setAnecdotesAction(anecdote))) }, [dispatch] ) 
+    dispatch(initializeAnecdotes()) 
+  }, [dispatch] ) 
   
     const anecdotes = useSelector((state) => (state.anecdote.filter(anecdote => (anecdote.content.includes(state.filter.format)) )))
-
 
   return (
     <div>
