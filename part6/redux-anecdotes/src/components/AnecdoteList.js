@@ -1,17 +1,18 @@
 
 
 import { useDispatch } from 'react-redux'
-import { increasVoteCountAction } from '../reducers/anecdoteReducer'
 import { createNewNotification, hideNotification } from '../reducers/notificationReducer'
+import { updateAnecdotes } from "../reducers/anecdoteReducer"
+
 
 const AnecdoteList = ({anecdotes}) => {
    
     const dispatch = useDispatch()
 
-    const increasVoteCount = (id) => {
-        console.log('vote', id)
-        dispatch( increasVoteCountAction(id) )
-        dispatch( createNewNotification( ` vote with id ${id} was up voted ` ) )
+    const increasVoteCount = (anecdote) => {
+        console.log('vote', anecdote.id)
+        dispatch( updateAnecdotes({...anecdote, votes: anecdote.votes + 1}) )
+        dispatch( createNewNotification( ` vote with id ${anecdote.id} was up voted ` ) )
         setTimeout(() => {
             dispatch( hideNotification() )
           }, 5000)
@@ -24,7 +25,7 @@ const AnecdoteList = ({anecdotes}) => {
             </div>
             <div>
             has {anecdote.votes}
-            <button onClick={() => increasVoteCount(anecdote.id)}>vote</button>
+            <button onClick={() => increasVoteCount(anecdote)}>vote</button>
             </div>
         </div>
         )
